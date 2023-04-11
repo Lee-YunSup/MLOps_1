@@ -1,0 +1,29 @@
+docker create nginx(이미지 이름) #nginx 이미지(디스크) 기반 컨테이너 생성
+docker run nginx(이미지 이름) # 컨테이너 생성 및 시작
+docker pull nginx:1.21 # nginx가 1.21인 이미지(디스크) 불러와짐
+
+docker ps # 실행중인 컨테이너 상태 확인
+docker ps -a # 전체 컨테이너 상태확인 
+docker inspect [컨테이너 이름] # 컨테이너의 상세 정보를 확인
+
+docker pause [컨테이너 이름] # 컨테이너 일시중지
+docker unpause [컨테이너 이름] # 컨테이너 재개
+docker stop [컨테이너 이름] # 컨테이너 종료
+docker kill [컨테이너 이름] # 컨테이너 강제 종료
+docker stop $(docker ps -a -q) # 모든 컨테이너 종
+docker rm [컨테이너 이름] # 컨테이너 삭제 (컨테이너 중지 후 삭제해야함)
+docker rm -f [컨테이너 이름] # 컨테이너 강제 종료 후 삭제
+docker run --rm ... # 컨테이너 실행 종료 후 자동 삭제
+docker container prune # 중지된 모든 컨테이너 삭제
+
+
+----------------Entrypoint와 Command-------------------------
+entrypoint와 command를 쓰는 이유 - 머신러닝 모델 소스코드를 entrypoint와 command를 주지 않으면 생성만 되지 실행이 안됨
+
+docker run --entrypoint echo ubuntu hello ubuntu # hello ubuntu 출력하기
+
+----------------환경 변수-------------------------
+docker run -it -e MY_HOST=1.1.1.1 ubuntu bash
+echo $MY_HOST # 환경 변수 설정 후 전달한 환경 변수 확인
+
+-------------------------명령어 실행----------------------
