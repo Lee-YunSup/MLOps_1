@@ -1,0 +1,78 @@
+docker run -it --name my-ubuntu ubuntu:latest #이 명령어를 통해 컨테이너 내부로 들어옴
+echo "hellow ubuntu" > my_file #hellow ubuntu 라는 파일을 만들어줌
+control + p + q # 명령어 저장 및 컨테이너 종료하지 않고 빠져나옴
+docker commit -a hwkim -m "Add my_file" my-ubuntu my-ubuntu:v1.0.0 # 1.0.0버전 새로운 이미지 생성
+
+
+
+이미지 만들 때 build 사용
+docker build -t my-app:v1 ./ # 현재 디렉토리를 빌드 컨텍스트로 my-app:v1 이미지 빌드
+docker build -t my-app:v1 -f dockerfile_hi # -f 옵션을 통해 build 할 dockerfile을 지정 (위에서 nano dockerfile_hi이라고 지정했으므로 dockerfile_hi로 설정)
+
+
+-----------------------------------------------------------------실습-------------------------------------------
+--------tensorflow 이미지를 가져와서 컨테이너 실행 후 디바이스 목록 확인하기-----
+docker run -d -it -p 8989:8989 -v $(pwd):/user --rm tensorflow/tensorflow
+python
+from tensorflow.python.client import device_lib
+device_lib.list_local_devices()
+
+
+--------miniconda3 이미지를 가져와서 컨테이너 실행 후 pandas, numpy 버전 확인하기-----
+docker run -d -it -p 8989:8989 -v $(pwd):/user --rm continuumio/miniconda3
+pip install pandas
+pip install numpy
+python
+import pandas
+pandas.__version__
+import numpy
+numpy.__version__
+exit()
+
+
+--------앞서 만든 컨테이너에서 jupyter notebook 실행하기-----------
+pip install jupyter
+jupyter notebook --no-browser --allow-root --ip=0.0.0.0 --port=8989
+
+
+
+
+-----------------------------------------------------------실습2------------------------------------------
+1.파이썬 3.9 베이스 이미지로 부터 이미지 만들기
+# Dockerfile 생성
+
+FROM python:3.9
+LABEL version, description
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install python3-pip -y
+WORKDIR /data/app
+
+# 해당 이미지를 사용해 컨테이너 실행
+docker build -t my-image:latest ./blue/
+docker images # 이미지 확인해보
+docker run -it -d --name my-cont my-image
+docker ps
+docker exec -it my-cont bash
+
+
+2. 파이썬 패키지를 포함한 이미지 만들기
+# Dockerfile 생성
+
+FROM python:3.9
+LABEL version, description
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install python3-pip -y
+WORKDIR /data/app
+COPY requirements.txt /data/app
+RUN pip install -r requirements.txt
+
+# 해당 이미지를 사용해 컨테이너 실행
+docker build -t my-image:latest ./db/
+docker run -it -d --name my-cont my-image
+docker exec -it my-cont bash
+pip freeze # 설치된 패키지 확인하기
+
+
+
