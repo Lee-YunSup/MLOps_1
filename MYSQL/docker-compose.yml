@@ -1,0 +1,16 @@
+# volume은 Docker volume 사용함
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64 # Prevent Error m1 mac
+    volumes:
+      - db_volume:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+volumes:
+  db_volume:

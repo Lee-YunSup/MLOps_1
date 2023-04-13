@@ -1,0 +1,38 @@
+version:  '3'
+services:
+  jupyter-datascience:
+      image: jupyter/datascience-notebook
+
+      build:
+       context: .
+       dockerfile: ./dockerfile
+
+      ports:
+        - 8890:8890
+      restart: always
+
+      volumes:
+        - ./app/project-ds
+
+
+  jupyter-engineer:
+      depends_on:
+        - jupyter-datascience
+
+      build:
+       context: .
+       dockerfile: ./dockerfile2
+      
+      ports:
+        - 8899:8899
+      restart: always
+
+      volumes:
+        - ./app/project-engineer
+
+      
+
+
+
+
+
